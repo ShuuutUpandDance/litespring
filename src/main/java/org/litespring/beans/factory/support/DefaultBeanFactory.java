@@ -16,51 +16,23 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
-public class DefaultBeanFactory implements BeanFactory {
-    public static final String ID_ATTRIBUTE = "id";
-    public static final String CLASS_ATTRIBUTE = "class";
+public class DefaultBeanFactory implements BeanFactory, BeanDefinitionRegistry{
+
     private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>(64);
 
-    public DefaultBeanFactory(String configFile) {
-        loadBeanDefinition(configFile);
-    }
-
-    private void loadBeanDefinition(String configFile) {
-        InputStream is = null;
-        try{
-            ClassLoader cl = ClassUtils.getDefaultClassLoader();
-            is = cl.getResourceAsStream(configFile);
-
-            SAXReader reader = new SAXReader();
-            Document doc = reader.read(is);
-
-            Element root = doc.getRootElement(); //<beans>
-            Iterator<Element> iter = root.elementIterator();
-            while(iter.hasNext()){
-                Element ele = (Element)iter.next();
-                String id = ele.attributeValue(ID_ATTRIBUTE);
-                String beanClassName = ele.attributeValue(CLASS_ATTRIBUTE);
-                BeanDefinition bd = new GenericBeanDefinition(id,beanClassName);
-                this.beanDefinitionMap.put(id, bd);
-            }
-        } catch (DocumentException e) {
-             throw new BeanDefinitionStoreException("IOException parsing XML document", e);
-        }finally{
-            if(is != null){
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    public DefaultBeanFactory() {
     }
 
     public BeanDefinition getBeanDefinition(String beanID) {
         return this.beanDefinitionMap.get(beanID);
     }
 
+    public void registerBeanDefinition(String beanID, BeanDefinition beanDefinition) {
+        this.beanDefinitionMap.put(beanID, beanDefinition);
+    }
+
     public Object getBean(String beanID) {
+        // 根据 id 创建对应的 bean 对象
         BeanDefinition bd = this.getBeanDefinition(beanID);
         if(bd == null){
             throw new BeanCreationException("Bean Definition does not exists");
