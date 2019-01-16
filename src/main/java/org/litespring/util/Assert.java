@@ -1,7 +1,7 @@
 package org.litespring.util;
 
 public class Assert {
-    public static void notNull(String message, Object object) {
+    public static void notNull(Object object, String message) {
         if (object == null) {
             throw new IllegalArgumentException(message);
         }

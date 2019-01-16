@@ -13,7 +13,7 @@ public class FileSystemResource implements Resource {
 
 
     public FileSystemResource(String path) {
-        Assert.notNull("Path must not be null", path);
+        Assert.notNull(path, "Path must not be null");
         this.file = new File(path);
         this.path = path;
     }
