@@ -14,11 +14,18 @@ public interface BeanDefinition {
 
     String getBeanClassName();
 
+    // setter 注入
     List<PropertyValue> getPropertyValues();
 
+    // constructor 注入
     ConstructorArgument getConstructorArgument();
 
     String getID();
 
     boolean hasConstructorArgumentValues();
+
+    // 注解扫描
+    Class<?> resolveBeanClass(ClassLoader classLoader) throws ClassNotFoundException;
+    Class<?> getBeanClass() throws IllegalStateException ;
+    boolean hasBeanClass();
 }
