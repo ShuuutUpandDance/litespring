@@ -1,5 +1,7 @@
 package org.litespring.beans;
 
+import org.litespring.beans.factory.support.GenericBeanDefinition;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +37,10 @@ public class ConstructorArgument {
      */
     public void clear() {
         this.argumentValues.clear();
+    }
+
+    public void addArgumentValue(Object value) {
+        this.argumentValues.add(new ValueHolder(value));
     }
 
     /**
